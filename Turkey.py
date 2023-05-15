@@ -139,9 +139,9 @@ def decline_word(word, gender, sentence):
         return 'error'
 
 
-sentence = input("+ , ? , - : ")
-gender = input("input gender: ")
-word = input("input word: ")
+sentence = input("тип предложения (+ , - , ? :_ ")
+gender = input("род (ben, sen, o, biz, siz, onlar : ")
+word = input("сущ: ")
 
 declined_word = decline_word(word, gender, sentence)
 print("результат: ", declined_word)
