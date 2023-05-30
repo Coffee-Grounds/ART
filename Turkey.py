@@ -1,81 +1,74 @@
-def decline_word(word, gender, sentence):
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("sentence", type=str, help="тип предложения")
+parser.add_argument("gender", type=str, help="местоимение")
+parser.add_argument("word", type=str, help="сущ")
+
+args = parser.parse_args()
+
+print(args)
+
+vowels_to_ending = {
+    "a": "ı",
+    "ı": "ı",
+    "e": "i",
+    "i": "i",
+    "o": "u",
+    "u": "u",
+    "ö": "ü",
+    "ü": "ü"
+}
+
+
+def decline_word(sentence, gender, word):
     last = word[-1]
-    second = word[-2]
+    penultimate = word[-2]
+    ending = vowels_to_ending.get(last)
+    ending_second = vowels_to_ending.get(penultimate)
+    two = ending or ending_second
 
-    if sentence == "+":
+    if sentence == "affirmative":
         if gender == "ben":
-            if last in ['a', '!']:
-                return f"ben {word}y!m"
-            elif last in ['e', 'i']:
-                return f"ben {word}yim"
-            elif last in ['o', 'u']:
-                return f"ben {word}yum"
-            elif last in ['ö', 'ü']:
-                return f"ben {word}yüm"
-            elif second in ['a', '!']:
-                return f"ben {word}!m"
-            elif second in ['e', 'i']:
-                return f"ben {word}im"
-            elif second in ['o', 'u']:
-                return f"ben {word}um"
-            elif second in ['ö', 'ü']:
-                return f"ben {word}üm"
+            if ending is not None:
+                return f"ben {word}y{ending}m"
 
-        elif gender == "sen":
-            if last in ['a', '!'] or second in ['a', '!']:
-                return f"sen {word}s!n"
-            elif last in ['e', 'i'] or second in ['e', 'i']:
-                return f"sen {word}sin"
-            elif last in ['o', 'u'] or second in ['o', 'u']:
-                return f"sen {word}sun"
-            elif last in ['ö', 'ü'] or second in ['ö', 'ü']:
-                return f"sen {word}sün"
+            if ending_second is not None:
+                return f"ben {word}{ending_second}m"
 
-        elif gender == "o":
+        if gender == "sen":
+            if two is not None:
+                return f"sen {word}s{two}n"
+
+        if gender == "o":
             return f"o {word}"
 
-        elif gender == "biz":
-            if last in ['a', '!']:
-                return f"biz {word}y!z"
-            elif last in ['e', 'i']:
-                return f"biz {word}yiz"
-            elif last in ['o', 'u']:
-                return f"biz {word}yuz"
-            elif last in ['ö', 'ü']:
-                return f"biz {word}yüz"
-            elif second in ['a', '!']:
-                return f"biz {word}!z"
-            elif second in ['e', 'i']:
-                return f"biz {word}iz"
-            elif second in ['o', 'u']:
-                return f"biz {word}uz"
-            elif second in ['ö', 'ü']:
-                return f"biz {word}üz"
+        if gender == "biz":
+            if ending is not None:
+                return f"biz {word}y{ending}z"
 
-        elif gender == "siz":
-            if last in ['a', '!'] or second in ['a', '!']:
-                return f"siz {word}s!n!z"
-            elif last in ['e', 'i'] or second in ['e', 'i']:
-                return f"siz {word}siniz"
-            elif last in ['o', 'u'] or second in ['o', 'u']:
-                return f"siz {word}sunuz"
-            elif last in ['ö', 'ü'] or second in ['ö', 'ü']:
-                return f"siz {word}sünüz"
+            if ending_second is not None:
+                return f"biz {word}{ending_second}z"
 
-        elif gender == "onlar":
-            if last in ['a', '!', 'o', 'u'] or second in ['a', '!', 'o', 'u']:
+        if gender == "siz":
+            if two is not None:
+                return f"siz {word}s{two}n{two}z"
+
+        if gender == "onlar":
+            if last in ['a', 'ı', 'o', 'u'] or penultimate in ['a', 'ı', 'o', 'u']:
                 return f"onlar {word}lar"
-            elif last in ['e', 'i', 'ö', 'ü'] or second in ['e', 'i', 'ö', 'ü']:
+            elif last in ['e', 'i', 'ö', 'ü'] or penultimate in ['e', 'i', 'ö', 'ü']:
                 return f"onlar {word}ler"
 
-    if sentence == "-":
+    if sentence == "negative":
         d = "degil"
         if gender == "ben":
             return f"ben {word} {d}im"
         if gender == "sen":
             return f"sen {word} {d}sin"
         if gender == "o":
-            return f"o {word} d"
+            return f"o {word} {d}"
         if gender == "biz":
             return f"biz {word} {d}iz"
         if gender == "siz":
@@ -83,65 +76,28 @@ def decline_word(word, gender, sentence):
         if gender == "onlar":
             return f"onlar {word} {d}ler"
 
-    if sentence == "?":
+    if sentence == "question":
         if gender == "ben":
-            if last in ["a", "!"] or second in ["a", "!"]:
-                return f"ben {word} m!y!m"
-            if last in ["e", "i"] or second in ["e", "i"]:
-                return f"ben {word} miyim"
-            if last in ["o", "u"] or second in ["o", "u"]:
-                return f"ben {word} muyum"
-            if last in ["ü", "ö"] or second in ["ü", "ö"]:
-                return f"ben {word} müyüm"
+            if two is not None:
+                return f"ben {word} m{two}y{two}m"
         if gender == "sen":
-            if last in ["a", "!"] or second in ["a", "!"]:
-                return f"sen {word} m!s!n"
-            if last in ["e", "i"] or second in ["e", "i"]:
-                return f"sen {word} misin"
-            if last in ["o", "u"] or second in ["o", "u"]:
-                return f"sen {word} musun"
-            if last in ["ü", "ö"] or second in ["ü", "ö"]:
-                return f"sen {word} müsün"
+            if two is not None:
+                return f"sen {word} m{two}s{two}n"
         if gender == "o":
-            if last in ["a", "!"] or second in ["a", "!"]:
-                return f"o {word} m!"
-            if last in ["e", "i"] or second in ["e", "i"]:
-                return f"o {word} mi"
-            if last in ["o", "u"] or second in ["o", "u"]:
-                return f"o {word} mu"
-            if last in ["ü", "ö"] or second in ["ü", "ö"]:
-                return f"o {word} mü"
+            if two is not None:
+                return f"o {word} m{two}"
         if gender == "biz":
-            if last in ["a", "!"] or second in ["a", "!"]:
-                return f"biz {word} m!y!z"
-            if last in ["e", "i"] or second in ["e", "i"]:
-                return f"biz {word} miyiz"
-            if last in ["o", "u"] or second in ["o", "u"]:
-                return f"biz {word} muyiz"
-            if last in ["ü", "ö"] or second in ["ü", "ö"]:
-                return f"biz {word} müyüz"
+            if two is not None:
+                return f"biz {word} m{two}y{two}z"
         if gender == "siz":
-            if last in ["a", "!"] or second in ["a", "!"]:
-                return f"siz {word} m!s!n!z"
-            if last in ["e", "i"] or second in ["e", "i"]:
-                return f"siz {word} misiniz"
-            if last in ["o", "u"] or second in ["o", "u"]:
-                return f"siz {word} musunuz"
-            if last in ["ü", "ö"] or second in ["ü", "ö"]:
-                return f"siz {word} müsünüz"
+            if two is not None:
+                return f"siz {word} m{two}s{two}n{two}z"
         if gender == "onlar":
-            if last in ['a', '!', 'o', 'u'] or second in ['a', '!', 'o', 'u']:
+            if last in ['a', 'ı', 'o', 'u'] or penultimate in ['a', 'ı', 'o', 'u']:
                 return f"onlar {word}lar m!"
-            elif last in ['e', 'i', 'ö', 'ü'] or second in ['e', 'i', 'ö', 'ü']:
+            elif last in ['e', 'i', 'ö', 'ü'] or penultimate in ['e', 'i', 'ö', 'ü']:
                 return f"onlar {word}ler mi"
 
-    else:
-        return 'error'
 
-
-sentence = input("тип предложения (+ , - , ?): ")
-gender = input("род (ben, sen, o, biz, siz, onlar): ")
-word = input("сущ: ")
-
-declined_word = decline_word(word, gender, sentence)
+declined_word = decline_word(args.sentence, args.gender, args.word)
 print("результат: ", declined_word)
